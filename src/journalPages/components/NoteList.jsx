@@ -11,7 +11,6 @@ import {
 import { setActiveNotes } from "../../store";
 
 export const NoteList = ({ title = "", body, id, date, imageUrls = [] }) => {
-  // const { id, title = "", body, imageUrls = [], date } = note;
   const dispatch = useDispatch();
 
   const newTitle = useMemo(() => {
@@ -31,7 +30,7 @@ export const NoteList = ({ title = "", body, id, date, imageUrls = [] }) => {
   }, [body]);
 
   const onclickNote = () => {
-    dispatch(setActiveNotes({ id, title, body, imageUrls: [], date }));
+    dispatch(setActiveNotes({ id, title, body, imageUrls, date }));
   };
 
   return (

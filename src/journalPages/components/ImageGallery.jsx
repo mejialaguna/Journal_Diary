@@ -1,17 +1,15 @@
 import { Box, ImageList, ImageListItem } from "@mui/material/";
 
-import { itemData } from "../../assets/itemData";
-
-export const ImageGallery = () => {
+export const ImageGallery = ({ urls }) => {
   return (
     <Box sx={{ width: "100%", overflowY: "scroll" }}>
       <ImageList variant="masonry" cols={3} gap={8}>
-        {itemData.map((item) => (
-          <ImageListItem key={item.img}>
+        {urls?.map((data) => (
+          <ImageListItem key={data?.asset_id}>
             <img
-              src={`${item.img}?w=248&fit=crop&auto=format`}
-              srcSet={`${item.img}?w=248&fit=crop&auto=format&dpr=2 2x`}
-              alt={item.title}
+              src={`${data?.secure_url}?w=248&fit=crop&auto=format`}
+              srcSet={`${data?.secure_url}?w=248&fit=crop&auto=format&dpr=2 2x`}
+              alt={data?.original_filename}
               loading="lazy"
             />
           </ImageListItem>

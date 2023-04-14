@@ -57,8 +57,6 @@ export function LoginPage() {
   const onGoogleSignIn = (e) => {
     e.preventDefault();
     dispatch(startGoogleSignIn());
-
-    console.log("google in");
   };
 
   return (

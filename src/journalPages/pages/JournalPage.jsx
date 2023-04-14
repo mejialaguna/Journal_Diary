@@ -55,6 +55,7 @@ export function JournalPage() {
           <AddIcon />
         </Fab>
       </ToolTip>
+
       <Snackbar
         open={showSnackbar}
         autoHideDuration={3500}

@@ -3,9 +3,12 @@ import {
   deleteDoc,
   doc,
   getDocs,
+  orderBy,
+  query,
   setDoc,
   updateDoc,
 } from "firebase/firestore/lite";
+
 import { FirebaseDB } from "../../firebase/config";
 import {
   addNewEmptyNote,
@@ -13,9 +16,12 @@ import {
   savingNewNote,
   setActiveNotes,
   setNotes,
+  setPhotosToActiveNotes,
   setSaving,
   updateNote,
 } from "./journalSlice";
+
+import { fileUpload } from "../../helpers";
 
 // --------------------> POST
 export const startNewNote = () => {
@@ -65,6 +71,8 @@ export const startLoadingNotes = () => {
       notesCollection.push({ id, ...doc.data() });
     });
 
+    notesCollection.sort((a, b) => new Date(b.date) - new Date(a.date));
+
     dispatch(setNotes(notesCollection));
   };
 };
@@ -78,7 +86,10 @@ export const startUpdatingActiveNote = (formState) => {
     const noteRef = doc(FirebaseDB, `${uuid}/journal/notes/${activeNote.id}`);
 
     try {
-      await updateDoc(noteRef, activeNote);
+      const newNoteActiveNote = { ...activeNote };
+      newNoteActiveNote.date = new Date().getTime();
+
+      await updateDoc(noteRef, newNoteActiveNote);
       dispatch(updateNote(activeNote));
       dispatch(setSaving("Note successfully updated"));
     } catch (error) {
@@ -95,7 +106,6 @@ export const DeleteOneNote = () => {
     const { id } = getState().journal.activeNote;
 
     try {
-      console.log(id, "deleted");
       await deleteDoc(doc(FirebaseDB, `${uid}/journal/notes/${id}`));
       dispatch(deleteNoteById(id));
       dispatch(setSaving("Note successfully deleted"));
@@ -110,6 +120,31 @@ export const DeleteOneNote = () => {
       return {
         ok: false,
       };
+    }
+  };
+};
+
+// --------------------> file upload to cloudinary
+
+export const startUploadingFiles = (files) => {
+  return async (dispatch, getState) => {
+    try {
+      const allImagesUrlPromises = [];
+      for (const values of files) {
+        allImagesUrlPromises.push(fileUpload(values));
+      }
+
+      const imgsUrls = await Promise.all(allImagesUrlPromises);
+
+      dispatch(setPhotosToActiveNotes(imgsUrls));
+
+      console.log("done");
+
+      const loadedMessage = files.length > 1 ? "image" : "images";
+      dispatch(setSaving(`${files.length} ${loadedMessage} uploaded`));
+    } catch (error) {
+      dispatch(setSaving(`error uploading images => ${error}`));
+      console.error(error);
     }
   };
 };

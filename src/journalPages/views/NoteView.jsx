@@ -3,14 +3,23 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import SaveIcon from "@mui/icons-material/Save";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { Button, Grid, TextField, Typography } from "@mui/material";
+import {
+  Button,
+  Fab,
+  Grid,
+  IconButton,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { dateFormatter, useForm } from "../../hooks";
 import {
   DeleteOneNote,
   setActiveNotes,
+  startLoadingNotes,
   startUpdatingActiveNote,
 } from "../../store";
 import { ImageGallery, ToolTip } from "../components";
+import { AddNewImage } from "../components/AddNewImage";
 
 export const NoteView = ({ setShowSnackbar }) => {
   const dispatch = useDispatch();
@@ -34,6 +43,7 @@ export const NoteView = ({ setShowSnackbar }) => {
 
   const startUpdatingNote = () => {
     dispatch(startUpdatingActiveNote(formState));
+    dispatch(startLoadingNotes());
     setShowSnackbar(true);
   };
 
@@ -101,8 +111,10 @@ export const NoteView = ({ setShowSnackbar }) => {
         />
       </Grid>
 
+      <AddNewImage />
+
       <Grid container>
-        <ImageGallery />
+        <ImageGallery urls={activeNote.imageUrls} />
       </Grid>
     </Grid>
   );

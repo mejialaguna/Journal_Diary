@@ -3,10 +3,19 @@ import { createSlice } from "@reduxjs/toolkit";
 export const journalSlice = createSlice({
   name: "journal",
   initialState: {
-    activeNote: null,
     isSaving: false,
     messageSave: "",
     notes: [],
+    activeNote: null,
+
+    //how active note should look
+    // activeNote: {
+    //   id: "",
+    //   title: "",
+    //   date: "",
+    //   body: "",
+    //   imageUrls: ""
+    // }
   },
   reducers: {
     savingNewNote: (state) => {
@@ -31,8 +40,8 @@ export const journalSlice = createSlice({
       );
     },
     setSaving: (state, { payload }) => {
-      state.messageSave = payload;
       state.isSaving = false;
+      state.messageSave = payload;
     },
     deleteNoteById: (state, { payload }) => {
       state.isSaving = true;
@@ -45,17 +54,23 @@ export const journalSlice = createSlice({
       state.messageSave = "";
       state.notes = [];
     },
+    setPhotosToActiveNotes: (state, { payload }) => {
+      //adding all images link to active note so it can be save after
+      state.activeNote.imageUrls = [...state.activeNote.imageUrls, ...payload];
+      state.isSaving = true;
+    },
   },
 });
 
 // Action creators are generated for each case reducer function
 export const {
   addNewEmptyNote,
+  clearAllNotesAfterLogout,
   deleteNoteById,
   savingNewNote,
   setActiveNotes,
   setNotes,
+  setPhotosToActiveNotes,
   setSaving,
   updateNote,
-  clearAllNotesAfterLogout,
 } = journalSlice.actions;
