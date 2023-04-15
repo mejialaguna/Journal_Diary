@@ -11,6 +11,8 @@ import { useCheckAuth } from "../hooks";
 export const AppRoute = () => {
   const { status } = useCheckAuth();
 
+  // since we are using useCheckAuth hook, that hook is checking into firebase if theres is an user authenticated. if theres is not user auth i am calling the logout fn which is setting status to "not-authenticated" sending us to the login page.
+
   if (status === "checking") {
     return <Loading />;
   }
