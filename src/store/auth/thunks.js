@@ -1,9 +1,11 @@
+// import { FirebaseDB } from "../../firebase/config";
 import {
   logoutFirebase,
   registerUserWithEmailAndPassword,
   signInUserWithEmailAndPassword,
   signInWithGoogle,
 } from "../../firebase/providers";
+// import { fileUpload } from "../../helpers";
 import { checkingCredential, logout, login } from "./";
 
 export const checkingAuthentication = (email, Password) => {

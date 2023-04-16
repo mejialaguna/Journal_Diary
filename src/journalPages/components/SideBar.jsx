@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useRef } from "react";
 
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import {
   Avatar,
@@ -11,19 +11,31 @@ import {
   List,
   Toolbar,
   Typography,
+  IconButton,
 } from "@mui/material";
 
+import { ToolTip } from "./";
 import { NoteList } from "./";
 
-function stringAvatar(name) {
-  return {
-    children: `${name.split(" ")[0][0]}${name.split(" ")[1][0]}`,
-  };
-}
+import {
+  // startLoadingUserAvatarImageUrl,
+  startSavingUserAvatarImgUrl,
+} from "../../store";
 
 export const SideBar = ({ drawerWidth = "240px" }) => {
-  const { displayName } = useSelector((state) => state.auth);
-  const { notes } = useSelector((state) => state.journal);
+  const { displayName, photoURL } = useSelector((state) => state.auth);
+  const { notes, isSaving } = useSelector((state) => state.journal);
+
+  const dispatch = useDispatch();
+
+  // adding reference from input to icon btn avatar
+  const fileInfoERef = useRef();
+
+  const onFileChange = async ({ target }) => {
+    if (target.files === 0) return;
+
+    dispatch(startSavingUserAvatarImgUrl(target.files));
+  };
 
   return (
     <Box
@@ -53,21 +65,38 @@ export const SideBar = ({ drawerWidth = "240px" }) => {
           }}
         >
           <Grid container justifyContent="space-around">
-            <Grid item display={"flex"} alignItems="center">
-              <Avatar
-                {...stringAvatar(displayName)}
-                sx={{ bgcolor: "blueviolet" }}
-              />
-              <Typography
-                ml={2}
-                className="animate__animated animate__bounceIn animate__fast"
-                letterSpacing={1}
-              >
+            <Grid
+              className="animate__animated animate__bounceIn animate__fast"
+              item
+              display={"flex"}
+              alignItems="center"
+            >
+              <ToolTip title="add your avatar image" placement="right">
+                <IconButton disabled={isSaving}>
+                  <input
+                    type="file"
+                    onChange={onFileChange}
+                    accept=" image/* ,.jpg, .jpeg, .png"
+                    ref={fileInfoERef}
+                    hidden
+                  />
+
+                  <Avatar
+                    onClick={() => fileInfoERef.current.click()}
+                    sx={{ bgcolor: "blueviolet", width: 45, height: 45 }}
+                    alt="avatar image"
+                    src={!!photoURL ? photoURL : null}
+                  />
+                </IconButton>
+              </ToolTip>
+
+              <Typography ml={2} letterSpacing={1}>
                 <b> {displayName} </b>
               </Typography>
             </Grid>
           </Grid>
         </Toolbar>
+
         <Divider />
         <List className="animate__animated animate__fadeInLeft animate__slow">
           {notes?.map((note) => (

@@ -44,14 +44,6 @@ export function LoginPage() {
     // dispatch(checkingAuthentication());
 
     dispatch(startLoginWithEmailAndPassword({ email, password }));
-
-    // if (status === "Authenticated") {
-    //   console.log("here");
-
-    //   navigate("/", {
-    //     replace: true,
-    //   });
-    // }
   };
 
   const onGoogleSignIn = (e) => {

@@ -14,7 +14,7 @@ export const journalSlice = createSlice({
     //   title: "",
     //   date: "",
     //   body: "",
-    //   imageUrls: ""
+    //   imageUrls: "",
     // }
   },
   reducers: {

@@ -2,14 +2,15 @@ import {
   collection,
   deleteDoc,
   doc,
+  getDoc,
   getDocs,
-  orderBy,
-  query,
   setDoc,
   updateDoc,
 } from "firebase/firestore/lite";
 
 import { FirebaseDB } from "../../firebase/config";
+
+import { setAvatarUserUrl } from "../auth";
 import {
   addNewEmptyNote,
   deleteNoteById,
@@ -36,6 +37,7 @@ export const startNewNote = () => {
       body: "",
       date: new Date().getTime(),
       title: "",
+      imageUrls: [],
     };
 
     try {
@@ -59,6 +61,7 @@ export const startLoadingNotes = () => {
     //this is the user id
     const { uuid: uid } = getState().auth;
 
+    // using Docs to get more than one doc
     const querySnapshot = await getDocs(
       collection(FirebaseDB, `${uid}/journal/notes`)
     );
@@ -78,7 +81,7 @@ export const startLoadingNotes = () => {
 };
 
 // --------------------> UPDATE
-export const startUpdatingActiveNote = (formState) => {
+export const startUpdatingActiveNote = () => {
   return async (dispatch, getState) => {
     const { uuid } = getState().auth;
     const { activeNote } = getState().journal;
@@ -90,6 +93,7 @@ export const startUpdatingActiveNote = (formState) => {
       newNoteActiveNote.date = new Date().getTime();
 
       await updateDoc(noteRef, newNoteActiveNote);
+
       dispatch(updateNote(activeNote));
       dispatch(setSaving("Note successfully updated"));
     } catch (error) {
@@ -138,12 +142,60 @@ export const startUploadingFiles = (files) => {
 
       dispatch(setPhotosToActiveNotes(imgsUrls));
 
-      console.log("done");
-
       const loadedMessage = files.length > 1 ? "image" : "images";
       dispatch(setSaving(`${files.length} ${loadedMessage} uploaded`));
     } catch (error) {
       dispatch(setSaving(`error uploading images => ${error}`));
+      console.error(error);
+    }
+  };
+};
+
+// --------------------> User Avatar ImgUrl upload to cloudinary
+
+export const startSavingUserAvatarImgUrl = (files) => {
+  //! getState is a function the help us get all the info state from our store.
+  return async (dispatch, getState) => {
+    //this is the user id
+    const { uuid: uid } = getState().auth;
+
+    try {
+      const { asset_id, original_filename, secure_url } = await fileUpload(
+        files[0]
+      );
+
+      if (secure_url) {
+        const urlRef = collection(FirebaseDB, `${uid}`);
+
+        await setDoc(doc(urlRef, "userUrlAvatar"), {
+          asset_id,
+          original_filename,
+          secure_url,
+        });
+
+        dispatch(setAvatarUserUrl(secure_url));
+
+        dispatch(setSaving("user avatar img url successfully saved"));
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+};
+
+// --------------------> get info from firebase and then start Loading All UserData
+export const startLoadingUserAvatarImageUrl = () => {
+  return async (dispatch, getState) => {
+    const { uuid: uid, email } = getState().auth; // retrieve the user id and email from the state
+
+    const docRef = doc(FirebaseDB, `${uid}`, "userUrlAvatar");
+    const docSnap = await getDoc(docRef);
+
+    try {
+      if (docSnap.exists()) {
+        dispatch(setAvatarUserUrl(docSnap.data().secure_url));
+      }
+    } catch (error) {
       console.error(error);
     }
   };

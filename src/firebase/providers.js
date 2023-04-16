@@ -37,7 +37,6 @@ export const signInWithGoogle = async () => {
     // The AuthCredential type that was used.
     const credential = GoogleAuthProvider.credentialFromError(error);
     // ...
-    console.log(error);
     return {
       errorCode,
       errorMessage,
@@ -80,7 +79,6 @@ export const registerUserWithEmailAndPassword = async ({
     };
   } catch (error) {
     const errorMessage = error.message;
-    // console.log({ error });
 
     return {
       ok: false,

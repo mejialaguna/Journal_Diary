@@ -17,6 +17,7 @@ import {
   setActiveNotes,
   startLoadingNotes,
   startUpdatingActiveNote,
+  startUploadingFiles,
 } from "../../store";
 import { ImageGallery, ToolTip } from "../components";
 import { AddNewImage } from "../components/AddNewImage";
@@ -50,6 +51,12 @@ export const NoteView = ({ setShowSnackbar }) => {
   const deleteNote = () => {
     dispatch(DeleteOneNote());
     setShowSnackbar(true);
+  };
+
+  const onFileChange = async ({ target }) => {
+    if (target.files === 0) return;
+
+    dispatch(startUploadingFiles(target.files));
   };
 
   return (
@@ -111,10 +118,25 @@ export const NoteView = ({ setShowSnackbar }) => {
         />
       </Grid>
 
-      <AddNewImage />
+      <AddNewImage>
+        <input
+          type="file"
+          onChange={onFileChange}
+          accept=" image/* ,.jpg, .jpeg, .png"
+          multiple
+          style={{
+            position: "absolute",
+            top: "-35px",
+            left: 0,
+            height: "calc(100% + 36px)",
+            width: "calc(100% + 5px)",
+            outline: "none",
+          }}
+        />
+      </AddNewImage>
 
       <Grid container>
-        <ImageGallery urls={activeNote.imageUrls} />
+        <ImageGallery urls={imageUrls} />
       </Grid>
     </Grid>
   );

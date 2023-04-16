@@ -3,39 +3,49 @@ import { createSlice } from "@reduxjs/toolkit";
 export const authSlice = createSlice({
   name: "auth",
   initialState: {
+    displayName: null,
+    email: null,
+    errorMessage: null,
+    isSaving: null,
+    photoURL: null,
     status: "checking", // "not-Authenticated", //checking
     uuid: null,
-    email: null,
-    displayName: null,
-    photoURL: null,
-    errorMessage: null,
   },
 
   reducers: {
     //------------
     login: (state, { payload }) => {
+      state.displayName = payload.displayName;
+      state.email = payload.email;
+      state.errorMessage = null;
+      state.photoURL = payload.photoURL;
       state.status = "Authenticated";
       state.uuid = payload.uid;
-      state.email = payload.email;
-      state.displayName = payload.displayName;
-      state.photoURL = payload.photoURL;
-      state.errorMessage = null;
     },
     //------------
     logout: (state, { payload }) => {
+      state.displayName = null;
+      state.email = null;
+      state.errorMessage = payload?.errorMessage;
+      state.photoURL = null;
       state.status = "not-Authenticated";
       state.uuid = null;
-      state.email = null;
-      state.displayName = null;
-      state.photoURL = null;
-      state.errorMessage = payload?.errorMessage;
     },
     //------------
     checkingCredential: (state, action) => {
       state.status = "checking";
     },
+
+    setAvatarUserUrl: (state, { payload }) => {
+      state.isSaving = true;
+      state.photoURL = payload;
+    },
+    setIsSaving: (state, { payload }) => {
+      state.isSaving = false;
+    },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { login, logout, checkingCredential } = authSlice.actions;
+export const { setAvatarUserUrl, login, logout, checkingCredential } =
+  authSlice.actions;

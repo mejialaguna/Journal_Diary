@@ -15,12 +15,7 @@ const LightTooltip = styled(({ className, ...props }) => (
 
 export const ToolTip = ({ title, placement, children }) => {
   return (
-    <LightTooltip
-      title={title}
-      describeChild
-      placement={placement}
-      followCursor
-    >
+    <LightTooltip title={title} describeChild placement={placement}>
       {children}
     </LightTooltip>
   );
