@@ -12,13 +12,15 @@ import {
 
 export const useCheckAuth = () => {
   const dispatch = useDispatch();
-  const { status } = useSelector((state) => state.auth);
+  const { status, errorMessage } = useSelector((state) => state.auth);
 
   useEffect(() => {
     onAuthStateChanged(FirebaseAuth, (user) => {
       if (!user) return dispatch(logout({ errorMessage }));
 
       const { uid, email, displayName, photoURL } = user;
+
+      console.log("line2:", { photoURL });
 
       if (!photoURL) {
         dispatch(startLoadingUserAvatarImageUrl());
