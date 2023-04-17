@@ -186,17 +186,23 @@ export const startSavingUserAvatarImgUrl = (files) => {
 // --------------------> get info from firebase and then start Loading All UserData
 export const startLoadingUserAvatarImageUrl = () => {
   return async (dispatch, getState) => {
-    const { uuid: uid, email } = getState().auth; // retrieve the user id and email from the state
-
     try {
+      const { uuid: uid, email } = getState().auth; // retrieve the user id and email from the state
+
       const docRef = doc(FirebaseDB, `${uid}`, "userUrlAvatar");
       const docSnap = await getDoc(docRef);
 
-      if (docSnap.exists()) {
-        dispatch(setAvatarUserUrl(docSnap.data().secure_url));
+      if (docSnap?.exists()) {
+        const avatarUrl = docSnap.data().secure_url;
+        // console.log("Avatar URL:", avatarUrl); // Logging the avatar URL
+        dispatch(setAvatarUserUrl(avatarUrl));
+      } else {
+        console.log("User avatar image not found");
+        throw new Error("something wrong fetching user avatar image");
       }
     } catch (error) {
       console.error(error);
+      throw new Error("Error fetching user avatar image: " + error.message);
     }
   };
 };

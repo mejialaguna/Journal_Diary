@@ -34,8 +34,6 @@ export const SideBar = ({ drawerWidth = "240px" }) => {
     dispatch(startSavingUserAvatarImgUrl(target.files));
   };
 
-  console.log("sideBar", { photoURL });
-
   return (
     <Box
       component="nav"
