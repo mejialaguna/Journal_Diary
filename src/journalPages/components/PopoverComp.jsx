@@ -29,7 +29,7 @@ export const PopoverComp = ({ handleClose, name, id, open, anchorElement }) => {
         >
           {name}
         </Typography>
-        <img src={anchorElement?.src} alt="popover" width="400" />
+        <img src={anchorElement?.src} alt="popover" width="250" />
       </Grid>
     </Popover>
   );
