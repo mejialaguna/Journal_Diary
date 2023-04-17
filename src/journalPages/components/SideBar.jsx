@@ -35,6 +35,7 @@ export const SideBar = ({ drawerWidth = "240px" }) => {
   };
 
   console.log("sideBar", { photoURL });
+
   return (
     <Box
       component="nav"

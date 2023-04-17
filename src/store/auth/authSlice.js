@@ -32,15 +32,15 @@ export const authSlice = createSlice({
       state.uuid = null;
     },
     //------------
-    checkingCredential: (state, action) => {
+    checkingCredential: (state) => {
       state.status = "checking";
     },
 
-    setAvatarUserUrl: (state, { payload }) => {
+    setAvatarUserUrl: (state, action) => {
       state.isSaving = true;
-      state.photoURL = payload;
+      state.photoURL = action?.payload;
     },
-    setIsSaving: (state, { payload }) => {
+    setIsSaving: (state) => {
       state.isSaving = false;
     },
   },

@@ -188,10 +188,10 @@ export const startLoadingUserAvatarImageUrl = () => {
   return async (dispatch, getState) => {
     const { uuid: uid, email } = getState().auth; // retrieve the user id and email from the state
 
-    const docRef = doc(FirebaseDB, `${uid}`, "userUrlAvatar");
-    const docSnap = await getDoc(docRef);
-
     try {
+      const docRef = doc(FirebaseDB, `${uid}`, "userUrlAvatar");
+      const docSnap = await getDoc(docRef);
+
       if (docSnap.exists()) {
         dispatch(setAvatarUserUrl(docSnap.data().secure_url));
       }

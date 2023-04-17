@@ -5,7 +5,6 @@ import { FirebaseAuth } from "../firebase/config";
 import {
   login,
   logout,
-  // startLoadingAllUserData,
   startLoadingNotes,
   startLoadingUserAvatarImageUrl,
 } from "../store";
@@ -20,11 +19,7 @@ export const useCheckAuth = () => {
 
       const { uid, email, displayName, photoURL } = user;
 
-      console.log("line2:", { photoURL });
-
-      if (!photoURL) {
-        dispatch(startLoadingUserAvatarImageUrl());
-      }
+      dispatch(startLoadingUserAvatarImageUrl());
 
       dispatch(login({ uid, email, displayName, photoURL }));
 
