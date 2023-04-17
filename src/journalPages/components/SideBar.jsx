@@ -17,10 +17,7 @@ import {
 import { ToolTip } from "./";
 import { NoteList } from "./";
 
-import {
-  // startLoadingUserAvatarImageUrl,
-  startSavingUserAvatarImgUrl,
-} from "../../store";
+import { startSavingUserAvatarImgUrl } from "../../store";
 
 export const SideBar = ({ drawerWidth = "240px" }) => {
   const { displayName, photoURL } = useSelector((state) => state.auth);
@@ -37,6 +34,7 @@ export const SideBar = ({ drawerWidth = "240px" }) => {
     dispatch(startSavingUserAvatarImgUrl(target.files));
   };
 
+  console.log("sideBar", { photoURL });
   return (
     <Box
       component="nav"
@@ -85,7 +83,7 @@ export const SideBar = ({ drawerWidth = "240px" }) => {
                     onClick={() => fileInfoERef.current.click()}
                     sx={{ bgcolor: "blueviolet", width: 45, height: 45 }}
                     alt="avatar image"
-                    src={!!photoURL ? photoURL : null}
+                    src={photoURL}
                   />
                 </IconButton>
               </ToolTip>

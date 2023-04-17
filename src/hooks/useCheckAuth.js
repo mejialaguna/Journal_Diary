@@ -8,12 +8,11 @@ import {
   // startLoadingAllUserData,
   startLoadingNotes,
   startLoadingUserAvatarImageUrl,
-  startSavingUserAvatarImgUrl,
 } from "../store";
 
 export const useCheckAuth = () => {
   const dispatch = useDispatch();
-  const { status, errorMessage, photoURL } = useSelector((state) => state.auth);
+  const { status } = useSelector((state) => state.auth);
 
   useEffect(() => {
     onAuthStateChanged(FirebaseAuth, (user) => {
