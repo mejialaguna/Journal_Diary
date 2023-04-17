@@ -13,7 +13,16 @@ export const AddNewImage = ({ children }) => {
       <Fab
         color="primary"
         aria-label="add-image"
-        sx={{ position: "fixed", bottom: 60, left: 300, overflow: "hidden" }}
+        sx={{
+          position: "fixed",
+          bottom: 60,
+          left: 300,
+          overflow: "hidden",
+          opacity: 0.5,
+          ":hover": { backgroundColor: "primary.main", opacity: 1 },
+          animation: "ease-in-out",
+          transition: "500ms",
+        }}
       >
         {children}
 

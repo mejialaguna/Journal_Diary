@@ -5,13 +5,12 @@ import { getFirestore } from "firebase/firestore/lite";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
-const process = import.meta.env;
-const api_key = process.VITE_APP_API_KEY;
-const auth_domain = process.VITE_APP_AUTH_DOMAIN;
-const project_id = process.VITE_APP_PROJECT_ID;
-const storage_bucket = process.VITE_APP_STORAGE_BUCKET;
-const messaging_sender_id = process.VITE_APP_MESSAGING_SEND_ID;
-const firebase_app_id = process.VITE_APP_FIREBASE_APP_ID;
+const api_key = import.meta.env.VITE_APP_API_KEY;
+const auth_domain = import.meta.env.VITE_APP_AUTH_DOMAIN;
+const project_id = import.meta.env.VITE_APP_PROJECT_ID;
+const storage_bucket = import.meta.env.VITE_APP_STORAGE_BUCKET;
+const messaging_sender_id = import.meta.env.VITE_APP_MESSAGING_SEND_ID;
+const firebase_app_id = import.meta.env.VITE_APP_FIREBASE_APP_ID;
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
