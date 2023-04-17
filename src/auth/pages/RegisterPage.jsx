@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 
 import { useDispatch, useSelector } from "react-redux";
 
-import { Link as RouterLink, useNavigate } from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
 
 import {
   Alert,
@@ -10,6 +10,7 @@ import {
   Button,
   Grid,
   Link,
+  OutlinedInput,
   TextField,
   Typography,
 } from "@mui/material";
@@ -17,6 +18,7 @@ import {
 import { AuthLayout } from "../layout";
 import { useForm } from "../../hooks";
 import { startCreatingUserWithEmailAndPassword } from "../../store";
+import { InputAdornmentComponent } from "../../journalPages/components";
 
 function validatePassword(value) {
   // Check if password includes at least one special character
@@ -52,8 +54,6 @@ const form = {
 };
 
 export const RegisterPage = () => {
-  const navigate = useNavigate();
-
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [error, setError] = useState(false);
 
@@ -86,6 +86,14 @@ export const RegisterPage = () => {
     dispatch(startCreatingUserWithEmailAndPassword(formState));
   };
 
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
+
   return (
     <AuthLayout header={"Register"}>
       {/* <h1>form Valid: {!isFormValid ? "no valid" : "valid"}</h1> */}
@@ -105,6 +113,9 @@ export const RegisterPage = () => {
               onChange={onInputChange}
               error={!!displayNameValid && formSubmitted}
               helperText={formSubmitted && error && displayNameValid}
+              autoComplete
+              autoFocus
+              required
             />
           </Grid>
         </Grid>
@@ -121,22 +132,31 @@ export const RegisterPage = () => {
               onChange={onInputChange}
               error={!!emailValid && formSubmitted}
               helperText={formSubmitted && error && emailValid}
+              required
             />
           </Grid>
         </Grid>
 
         <Grid container>
           <Grid item xs={12} sx={{ mt: 2 }}>
-            <TextField
-              label="password"
-              type="password"
-              placeholder="password"
+            <OutlinedInput
+              label="Password"
+              type={showPassword ? "text" : "password"}
+              placeholder="Password"
               fullWidth
               name="password"
               value={password}
               onChange={onInputChange}
               error={!!passwordValid && formSubmitted}
               helperText={formSubmitted && error && passwordValid}
+              required
+              endAdornment={
+                <InputAdornmentComponent
+                  handleClickShowPassword={handleClickShowPassword}
+                  showPassword={showPassword}
+                  handleMouseDownPassword={handleMouseDownPassword}
+                />
+              }
             />
           </Grid>
 

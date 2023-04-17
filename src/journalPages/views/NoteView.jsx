@@ -99,6 +99,9 @@ export const NoteView = ({ setShowSnackbar }) => {
           name="title"
           value={title}
           onChange={onInputChange}
+          autoComplete
+          autoFocus
+          required
         />
       </Grid>
 
@@ -115,6 +118,7 @@ export const NoteView = ({ setShowSnackbar }) => {
           name="body"
           value={body}
           onChange={onInputChange}
+          required
         />
       </Grid>
 

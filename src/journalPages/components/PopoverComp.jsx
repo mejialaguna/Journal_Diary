@@ -1,21 +1,19 @@
 import { Grid, Popover, Typography } from "@mui/material";
 import React from "react";
 
-export const PopoverComp = ({ handleClose, name, id, open, anchorElement }) => {
+export const PopoverComp = ({ anchorElement, handleClose, id, name, open }) => {
   return (
     <Popover
       id={id}
       open={open}
       anchorEl={anchorElement}
       onClose={handleClose}
-      anchorReference="anchorPosition"
-      anchorPosition={{ top: 800, left: 1000 }}
       anchorOrigin={{
-        vertical: "bottom",
+        vertical: "center",
         horizontal: "center",
       }}
       transformOrigin={{
-        vertical: "bottom",
+        vertical: "center",
         horizontal: "center",
       }}
     >
@@ -29,7 +27,7 @@ export const PopoverComp = ({ handleClose, name, id, open, anchorElement }) => {
         >
           {name}
         </Typography>
-        <img src={anchorElement?.src} alt="popover" width="250" />
+        <img src={anchorElement?.src} alt="popover" width="400" />
       </Grid>
     </Popover>
   );

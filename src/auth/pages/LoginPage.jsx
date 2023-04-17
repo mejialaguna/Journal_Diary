@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { Link as RouterLink } from "react-router-dom";
@@ -11,8 +11,18 @@ import {
   Link,
   Alert,
   AlertTitle,
+  IconButton,
+  InputAdornment,
+  InputLabel,
+  OutlinedInput,
 } from "@mui/material";
-import { Google } from "@mui/icons-material";
+import {
+  Google,
+  Visibility,
+  VisibilityOff,
+  VisibilityOffTwoTone,
+  VisibilityTwoTone,
+} from "@mui/icons-material";
 import { AuthLayout } from "../layout/AuthLayout";
 
 import { useForm } from "../../hooks";
@@ -21,6 +31,7 @@ import {
   startLoginWithEmailAndPassword,
   startGoogleSignIn,
 } from "../../store";
+import { InputAdornmentComponent } from "../../journalPages/components/InputAdornmentComponent";
 
 const form = {
   email: "",
@@ -51,6 +62,14 @@ export function LoginPage() {
     dispatch(startGoogleSignIn());
   };
 
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
+
   return (
     <AuthLayout header={"Login"}>
       <form className="animate__animated animate__fadeIn" onSubmit={onSubmit}>
@@ -64,20 +83,32 @@ export function LoginPage() {
               name="email"
               value={email}
               onChange={onInputChange}
+              autoComplete
+              autoFocus
+              required
             />
           </Grid>
         </Grid>
 
         <Grid container>
           <Grid item xs={12} sx={{ mt: 2 }}>
-            <TextField
-              label="password"
-              type="password"
-              placeholder="password"
+            <OutlinedInput
+              id="outlined-adornment-password"
+              label="Password"
+              type={showPassword ? "text" : "password"}
+              placeholder="Password"
               fullWidth
               name="password"
               value={password}
               onChange={onInputChange}
+              required
+              endAdornment={
+                <InputAdornmentComponent
+                  handleClickShowPassword={handleClickShowPassword}
+                  showPassword={showPassword}
+                  handleMouseDownPassword={handleMouseDownPassword}
+                />
+              }
             />
           </Grid>
 

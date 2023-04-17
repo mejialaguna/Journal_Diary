@@ -7,9 +7,10 @@ export const ImageGallery = ({ urls }) => {
   const [name, setName] = useState(null);
 
   const handleClick = (event) => {
-    setAnchorElement(event?.currentTarget);
+    setAnchorElement(event.currentTarget);
     setName(event.target.alt);
   };
+
   const handleClose = () => {
     setAnchorElement(null);
   };
@@ -38,10 +39,10 @@ export const ImageGallery = ({ urls }) => {
       </Box>
       <PopoverComp
         anchorElement={anchorElement}
+        handleClose={handleClose}
+        id={id}
         name={name}
         open={open}
-        id={id}
-        handleClose={handleClose}
       />
     </>
   );
