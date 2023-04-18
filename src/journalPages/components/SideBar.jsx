@@ -82,7 +82,7 @@ export const SideBar = ({ drawerWidth = "240px" }) => {
                     onClick={() => fileInfoERef.current.click()}
                     sx={{ bgcolor: "blueviolet", width: 45, height: 45 }}
                     alt="avatar image"
-                    src={photoURL}
+                    src={photoURL?.secure_url}
                   />
                 </IconButton>
               </ToolTip>

@@ -1,4 +1,5 @@
 import {
+  addDoc,
   collection,
   deleteDoc,
   doc,
@@ -55,6 +56,25 @@ export const startNewNote = () => {
   };
 };
 
+export const startSavingUserAvatarImgUrl = (files) => {
+  //! getState is a function the help us get all the info state from our store.
+  return async (dispatch, getState) => {
+    //this is the user id
+    const { uuid: uid } = getState().auth;
+
+    const { asset_id, original_filename, secure_url } = await fileUpload(
+      files[0]
+    );
+
+    const docRef = collection(FirebaseDB, `${uid}/journal/userAvatarUrl`);
+    await addDoc(docRef, {
+      cloudinary_ulr_id: asset_id,
+      original_filename,
+      secure_url,
+    });
+  };
+};
+
 // --------------------> READ
 export const startLoadingNotes = () => {
   return async (dispatch, getState) => {
@@ -77,6 +97,53 @@ export const startLoadingNotes = () => {
     notesCollection.sort((a, b) => new Date(b.date) - new Date(a.date));
 
     dispatch(setNotes(notesCollection));
+  };
+};
+
+export const startLoadingUserAvatarImageUrl = () => {
+  return async (dispatch, getState) => {
+    const { uuid: uid, email } = getState().auth; // retrieve the user id and email from the state
+
+    try {
+      const docRef = collection(FirebaseDB, `${uid}/journal/userAvatarUrl`);
+      const docSnap = await getDocs(docRef);
+
+      if (docSnap?.empty) {
+        throw new Error("No such document!");
+      }
+
+      const newDocExtract = {
+        doc_id: docSnap?.docs[0]?.id,
+        ...docSnap.docs[0].data(),
+      };
+      console.log("Document data:", docSnap.docs[0].data());
+      dispatch(setAvatarUserUrl(newDocExtract));
+    } catch (error) {
+      console.error(error);
+    }
+
+    // const querySnapshot = await getDocs(
+    //   collection(FirebaseDB, `${uid}/journal/userAvatarUrl`)
+    // );
+
+    // let notesCollection = [];
+
+    // querySnapshot.forEach((doc) => {
+    //   // each note entry id
+    //   const doc_id = doc.id;
+    //   notesCollection.push({ doc_id, ...doc.data() });
+    // });
+
+    // console.log(notesCollection);
+
+    // try {
+    //   if (docSnap.exists()) {
+    //     dispatch(setAvatarUserUrl(docSnap.data().secure_url));
+    //   }
+    //   throw new Error("something wrong fetching user avatar image");
+    // } catch (error) {
+    //   console.error(error);
+    // }
   };
 };
 
@@ -153,56 +220,4 @@ export const startUploadingFiles = (files) => {
 
 // --------------------> User Avatar ImgUrl upload to cloudinary
 
-export const startSavingUserAvatarImgUrl = (files) => {
-  //! getState is a function the help us get all the info state from our store.
-  return async (dispatch, getState) => {
-    //this is the user id
-    const { uuid: uid } = getState().auth;
-
-    try {
-      const { asset_id, original_filename, secure_url } = await fileUpload(
-        files[0]
-      );
-
-      if (secure_url) {
-        const urlRef = collection(FirebaseDB, `${uid}`);
-
-        await setDoc(doc(urlRef, "userUrlAvatar"), {
-          asset_id,
-          original_filename,
-          secure_url,
-        });
-
-        dispatch(setAvatarUserUrl(secure_url));
-
-        dispatch(setSaving("user avatar img url successfully saved"));
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
-};
-
 // --------------------> get info from firebase and then start Loading All UserData
-export const startLoadingUserAvatarImageUrl = () => {
-  return async (dispatch, getState) => {
-    try {
-      const { uuid: uid, email } = getState().auth; // retrieve the user id and email from the state
-
-      const docRef = doc(FirebaseDB, `${uid}`, "userUrlAvatar");
-      const docSnap = await getDoc(docRef);
-
-      if (docSnap?.exists()) {
-        const avatarUrl = docSnap.data().secure_url;
-        // console.log("Avatar URL:", avatarUrl); // Logging the avatar URL
-        dispatch(setAvatarUserUrl(avatarUrl));
-      } else {
-        console.log("User avatar image not found");
-        throw new Error("something wrong fetching user avatar image");
-      }
-    } catch (error) {
-      console.error(error);
-      throw new Error("Error fetching user avatar image: " + error.message);
-    }
-  };
-};

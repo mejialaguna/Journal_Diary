@@ -36,9 +36,9 @@ export const authSlice = createSlice({
       state.status = "checking";
     },
 
-    setAvatarUserUrl: (state, action) => {
+    setAvatarUserUrl: (state, { payload }) => {
       state.isSaving = true;
-      state.photoURL = action?.payload;
+      state.photoURL = payload;
     },
     setIsSaving: (state) => {
       state.isSaving = false;
