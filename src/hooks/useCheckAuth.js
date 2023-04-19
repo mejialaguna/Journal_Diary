@@ -17,12 +17,13 @@ export const useCheckAuth = () => {
     onAuthStateChanged(FirebaseAuth, (user) => {
       if (!user) return dispatch(logout({ errorMessage }));
 
-      dispatch(startLoadingUserAvatarImageUrl());
-
       const { uid, email, displayName, photoURL } = user;
+
       dispatch(login({ uid, email, displayName, photoURL }));
 
       dispatch(startLoadingNotes());
+
+      dispatch(startLoadingUserAvatarImageUrl());
     });
   }, []);
 

@@ -99,7 +99,6 @@ export const NoteView = ({ setShowSnackbar }) => {
           name="title"
           value={title}
           onChange={onInputChange}
-          autoComplete
           autoFocus
           required
         />

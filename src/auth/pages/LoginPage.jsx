@@ -83,7 +83,6 @@ export function LoginPage() {
               name="email"
               value={email}
               onChange={onInputChange}
-              autoComplete
               autoFocus
               required
             />

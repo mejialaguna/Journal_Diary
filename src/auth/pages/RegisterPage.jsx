@@ -113,7 +113,6 @@ export const RegisterPage = () => {
               onChange={onInputChange}
               error={!!displayNameValid && formSubmitted}
               helperText={formSubmitted && error && displayNameValid}
-              autoComplete
               autoFocus
               required
             />
