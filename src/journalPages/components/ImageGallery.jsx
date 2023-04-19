@@ -21,7 +21,7 @@ export const ImageGallery = ({ urls }) => {
   return (
     <>
       <Box sx={{ width: "100%", height: "100%", overflowY: "scroll" }}>
-        <ImageList variant="masonry" cols={5} gap={15}>
+        <ImageList variant="masonry" cols={6} gap={22}>
           {urls?.map((data) => (
             <ImageListItem key={data.asset_id}>
               <img
