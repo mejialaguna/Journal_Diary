@@ -1,33 +1,27 @@
-import React from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
 
-import {
-  AppBar,
-  Avatar,
-  Grid,
-  IconButton,
-  Toolbar,
-  Typography,
-} from "@mui/material";
+import { AppBar, Grid, IconButton, Toolbar, Typography } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import { LoginOutlined } from "@mui/icons-material";
 import { clearAllNotesAfterLogout, startLogout } from "../../store";
 import { ToolTip } from "./ToolTip";
-
-// function stringAvatar(name) {
-//   return {
-//     children: `${name.split(" ")[0][0]}${name.split(" ")[1][0]}`,
-//   };
-// }
+import { ConfirmDialog } from "./ConfirmDialog";
 
 export const NavBar = ({ drawerWidth }) => {
+  const [open, setOpen] = useState(false);
+
   const dispatch = useDispatch();
-  const { displayName } = useSelector((state) => state.auth);
 
   const onLogout = () => {
     dispatch(clearAllNotesAfterLogout());
     dispatch(startLogout());
   };
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
   return (
     <AppBar
       position="fixed"
@@ -60,18 +54,20 @@ export const NavBar = ({ drawerWidth }) => {
           </Grid>
 
           <Grid item display={"flex"} alignItems="center">
-            {/* <Avatar
-              {...stringAvatar(displayName)}
-              sx={{ bgcolor: "blueviolet" }}
-            /> */}
-
             <ToolTip title="Logout" placement="left">
-              <IconButton color="error" onClick={onLogout}>
+              <IconButton color="error" onClick={handleClickOpen}>
                 <LoginOutlined />
               </IconButton>
             </ToolTip>
           </Grid>
         </Grid>
+
+        <ConfirmDialog
+          open={open}
+          setOpen={setOpen}
+          action={onLogout}
+          actionMessage="logout"
+        />
       </Toolbar>
     </AppBar>
   );

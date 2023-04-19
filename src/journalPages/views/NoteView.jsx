@@ -1,16 +1,9 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import { useDispatch, useSelector } from "react-redux";
 import SaveIcon from "@mui/icons-material/Save";
 import DeleteIcon from "@mui/icons-material/Delete";
-import {
-  Button,
-  Fab,
-  Grid,
-  IconButton,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Button, Grid, TextField, Typography } from "@mui/material";
 import { dateFormatter, useForm } from "../../hooks";
 import {
   DeleteOneNote,
@@ -19,7 +12,7 @@ import {
   startUpdatingActiveNote,
   startUploadingFiles,
 } from "../../store";
-import { ImageGallery, ToolTip } from "../components";
+import { ConfirmDialog, ImageGallery, ToolTip } from "../components";
 import { AddNewImage } from "../components/AddNewImage";
 
 export const NoteView = ({ setShowSnackbar }) => {
@@ -27,14 +20,16 @@ export const NoteView = ({ setShowSnackbar }) => {
   const { activeNote } = useSelector((state) => state.journal);
 
   const {
-    id,
-    title,
     body,
     date,
+    formState,
+    id,
     imageUrls = [],
     onInputChange,
-    formState,
+    title,
   } = useForm(activeNote);
+
+  const [open, setOpen] = useState(false);
 
   const formattedDate = dateFormatter(date);
 
@@ -59,6 +54,10 @@ export const NoteView = ({ setShowSnackbar }) => {
     dispatch(startUploadingFiles(target.files));
   };
 
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
   return (
     <Grid
       alignItems="center"
@@ -81,7 +80,10 @@ export const NoteView = ({ setShowSnackbar }) => {
         </Button>
 
         <ToolTip title="Delete" placement="bottom">
-          <Button sx={{ padding: 2, color: "error.main" }} onClick={deleteNote}>
+          <Button
+            sx={{ padding: 2, color: "error.main" }}
+            onClick={handleClickOpen}
+          >
             <DeleteIcon sx={{ fontSize: 30, color: "error.main", mr: 2 }} />
             delete
           </Button>
@@ -141,6 +143,13 @@ export const NoteView = ({ setShowSnackbar }) => {
       <Grid container>
         <ImageGallery urls={imageUrls} />
       </Grid>
+
+      <ConfirmDialog
+        open={open}
+        setOpen={setOpen}
+        action={deleteNote}
+        actionMessage="Delete"
+      />
     </Grid>
   );
 };
