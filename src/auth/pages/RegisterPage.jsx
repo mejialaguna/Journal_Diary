@@ -10,7 +10,6 @@ import {
   Button,
   Grid,
   Link,
-  OutlinedInput,
   TextField,
   Typography,
 } from "@mui/material";
@@ -22,9 +21,9 @@ import { InputAdornmentComponent } from "../../journalPages/components";
 
 function validatePassword(value) {
   // Check if password includes at least one special character
-  const specialCharacters = /[\!\@\#\$\%\^\&\*\(\)\_\+\.\,\;\:\-]/;
+  const regex = /^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{9,}$/;
 
-  if (specialCharacters.test(value) && value.length > 8) {
+  if (regex.test(value)) {
     return true;
   }
 
@@ -42,7 +41,7 @@ const validator = {
   ],
   password: [
     (value) => validatePassword(value),
-    "password should contain more than 8 characters and special 1 character",
+    "password should contain more than 8 characters, 1 special character and 1 Capital letter",
   ],
   displayName: [(name) => name.length >= 4, "Name is required"],
 };
@@ -95,23 +94,23 @@ export const RegisterPage = () => {
   };
 
   return (
-    <AuthLayout header={"Register"}>
+    <AuthLayout header={'Register'}>
       {/* <h1>form Valid: {!isFormValid ? "no valid" : "valid"}</h1> */}
       <form
-        className="animate__animated animate__fadeIn animation-duration: 3s"
+        className='animate__animated animate__fadeIn animation-duration: 3s'
         onSubmit={onSubmit}
       >
         <Grid container>
           <Grid item xs={12} sx={{ mt: 2 }}>
             <TextField
-              label="Full Name"
-              type="text"
-              placeholder="Full Name"
+              label='Full Name'
+              type='text'
+              placeholder='Full Name'
               fullWidth
-              name="displayName"
+              name='displayName'
               value={displayName}
               onChange={onInputChange}
-              error={!!displayNameValid && formSubmitted}
+              error={formSubmitted && error && displayNameValid}
               helperText={formSubmitted && error && displayNameValid}
               autoFocus
               required
@@ -122,11 +121,11 @@ export const RegisterPage = () => {
         <Grid container>
           <Grid item xs={12} sx={{ mt: 2 }}>
             <TextField
-              label="Email"
-              type="email"
-              placeholder="email@domain.com"
+              label='Email'
+              type='email'
+              placeholder='email@domain.com'
               fullWidth
-              name="email"
+              name='email'
               value={email}
               onChange={onInputChange}
               error={!!emailValid && formSubmitted}
@@ -137,30 +136,32 @@ export const RegisterPage = () => {
         </Grid>
 
         <Grid container>
-          <Grid item xs={12} sx={{ mt: 2 }}>
-            <OutlinedInput
-              label="Password"
-              type={showPassword ? "text" : "password"}
-              placeholder="Password"
+          <Grid item xs={12} sx={{ mt: 2 }} position={'relative'}>
+            <TextField
+              label='Password'
+              type={showPassword ? 'text' : 'password'}
+              placeholder='Password'
               fullWidth
-              name="password"
+              name='password'
               value={password}
               onChange={onInputChange}
-              error={!!passwordValid && formSubmitted}
+              error={formSubmitted && error && passwordValid}
               helperText={formSubmitted && error && passwordValid}
               required
-              endAdornment={
-                <InputAdornmentComponent
-                  handleClickShowPassword={handleClickShowPassword}
-                  showPassword={showPassword}
-                  handleMouseDownPassword={handleMouseDownPassword}
-                />
-              }
+              InputProps={{
+                endAdornment: (
+                  <InputAdornmentComponent
+                    handleClickShowPassword={handleClickShowPassword}
+                    showPassword={showPassword}
+                    handleMouseDownPassword={handleMouseDownPassword}
+                  />
+                ),
+              }}
             />
           </Grid>
 
-          <Grid item xs={12} display={errorMessage ? "block" : "none"} mt={2}>
-            <Alert severity="error">
+          <Grid item xs={12} display={errorMessage ? 'block' : 'none'} mt={2}>
+            <Alert severity='error'>
               <AlertTitle>Error</AlertTitle>
               <strong>{errorMessage}!</strong>
             </Alert>
@@ -169,9 +170,9 @@ export const RegisterPage = () => {
           <Grid container spacing={2} sx={{ mb: 2, mt: 1 }}>
             <Grid item xs={12}>
               <Button
-                variant="contained"
+                variant='contained'
                 fullWidth
-                type="submit"
+                type='submit'
                 disabled={isAuthenticating}
               >
                 Create
@@ -186,12 +187,12 @@ export const RegisterPage = () => {
             </Grid> */}
           </Grid>
 
-          <Grid container direction={"row"} justifyContent="end">
+          <Grid container direction={'row'} justifyContent='end'>
             <Typography sx={{ mr: 1 }}> already have an account? </Typography>
             <Link
-              color={"inherit"}
+              color={'inherit'}
               component={RouterLink} // this is the reference to the Link tag from React router dom since we are using MUI it needs to be like this , because we are using the LINK tag from MUI first and after we are refering to the link tag of React router dom inside the component method. we re-named "RouterLink" son they dont colide between the LINK tag of MUI and React router dom.
-              to="/auth/login"
+              to='/auth/login'
             >
               Login.
             </Link>

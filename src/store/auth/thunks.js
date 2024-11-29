@@ -35,7 +35,6 @@ export const startCreatingUserWithEmailAndPassword = ({
 }) => {
   return async (dispatch) => {
     dispatch(checkingCredential());
-
     const response = await registerUserWithEmailAndPassword({
       email,
       password,

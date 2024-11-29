@@ -36,7 +36,7 @@ export const SideBar = ({ drawerWidth = "240px" }) => {
 
   return (
     <Box
-      component="nav"
+      component='nav'
       sx={{
         width: { sm: drawerWidth },
         flexShrink: { sm: 0 },
@@ -46,42 +46,44 @@ export const SideBar = ({ drawerWidth = "240px" }) => {
         sx={{
           width: drawerWidth,
           flexShrink: 0,
-          "& .MuiDrawer-paper": {
+          '& .MuiDrawer-paper': {
             width: drawerWidth,
-            boxSizing: "border-box",
+            boxSizing: 'border-box',
           },
         }}
-        variant="permanent"
-        anchor="left"
+        variant='permanent'
+        anchor='left'
       >
         <Toolbar
           sx={{
-            justifyContent: "center",
-            backgroundColor: "primary.main",
-            color: "white",
+            justifyContent: 'center',
+            backgroundColor: 'primary.main',
+            color: 'white',
           }}
         >
-          <Grid container justifyContent="space-around">
+          <Grid container justifyContent='space-around'>
             <Grid
-              className="animate__animated animate__bounceIn animate__fast"
+              className='animate__animated animate__bounceIn animate__fast'
               item
-              display={"flex"}
-              alignItems="center"
+              display={'flex'}
+              alignItems='center'
             >
-              <ToolTip title="add your avatar image" placement="right">
-                <IconButton disabled={isSaving}>
+              <ToolTip title='add your avatar image' placement='right'>
+                <IconButton
+                  disabled={isSaving}
+                  onClick={() => fileInfoERef.current.click()}
+                >
                   <input
-                    type="file"
+                    type='file'
                     onChange={onFileChange}
-                    accept=" image/* ,.jpg, .jpeg, .png"
+                    accept=' image/* ,.jpg, .jpeg, .png'
                     ref={fileInfoERef}
                     hidden
                   />
 
                   <Avatar
-                    onClick={() => fileInfoERef.current.click()}
-                    sx={{ bgcolor: "blueviolet", width: 45, height: 45 }}
-                    alt="avatar image"
+                    sx={{ bgcolor: 'blueviolet', width: 45, height: 45 }}
+                    alt='avatar image'
                     src={photoURL?.secure_url}
                   />
                 </IconButton>
@@ -95,7 +97,7 @@ export const SideBar = ({ drawerWidth = "240px" }) => {
         </Toolbar>
 
         <Divider />
-        <List className="animate__animated animate__fadeInLeft animate__slow">
+        <List className='animate__animated animate__fadeInLeft animate__slow'>
           {notes?.map((note) => (
             <NoteList key={note.id} {...note} />
           ))}

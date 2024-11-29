@@ -11,18 +11,8 @@ import {
   Link,
   Alert,
   AlertTitle,
-  IconButton,
-  InputAdornment,
-  InputLabel,
-  OutlinedInput,
 } from "@mui/material";
-import {
-  Google,
-  Visibility,
-  VisibilityOff,
-  VisibilityOffTwoTone,
-  VisibilityTwoTone,
-} from "@mui/icons-material";
+import { Google } from "@mui/icons-material";
 import { AuthLayout } from "../layout/AuthLayout";
 
 import { useForm } from "../../hooks";
@@ -71,16 +61,16 @@ export function LoginPage() {
   };
 
   return (
-    <AuthLayout header={"Login"}>
-      <form className="animate__animated animate__fadeIn" onSubmit={onSubmit}>
+    <AuthLayout header={'Login'}>
+      <form className='animate__animated animate__fadeIn' onSubmit={onSubmit}>
         <Grid container>
           <Grid item xs={12} sx={{ mt: 2 }}>
             <TextField
-              label="Email"
-              type="email"
-              placeholder="email@domain.com"
+              label='Email'
+              type='email'
+              placeholder='email@domain.com'
               fullWidth
-              name="email"
+              name='email'
               value={email}
               onChange={onInputChange}
               autoFocus
@@ -91,28 +81,30 @@ export function LoginPage() {
 
         <Grid container>
           <Grid item xs={12} sx={{ mt: 2 }}>
-            <OutlinedInput
-              id="outlined-adornment-password"
-              label="Password"
-              type={showPassword ? "text" : "password"}
-              placeholder="Password"
+            <TextField
+              id='outlined-adornment-password'
+              label='Password'
+              type={showPassword ? 'text' : 'password'}
+              placeholder='Password'
               fullWidth
-              name="password"
+              name='password'
               value={password}
               onChange={onInputChange}
               required
-              endAdornment={
-                <InputAdornmentComponent
-                  handleClickShowPassword={handleClickShowPassword}
-                  showPassword={showPassword}
-                  handleMouseDownPassword={handleMouseDownPassword}
-                />
-              }
+              InputProps={{
+                endAdornment: (
+                  <InputAdornmentComponent
+                    handleClickShowPassword={handleClickShowPassword}
+                    showPassword={showPassword}
+                    handleMouseDownPassword={handleMouseDownPassword}
+                  />
+                ),
+              }}
             />
           </Grid>
 
-          <Grid item xs={12} display={errorMessage ? "block" : "none"} mt={2}>
-            <Alert severity="error">
+          <Grid item xs={12} display={errorMessage ? 'block' : 'none'} mt={2}>
+            <Alert severity='error'>
               <AlertTitle>Error</AlertTitle>
               <strong>{errorMessage}!</strong>
             </Alert>
@@ -121,18 +113,18 @@ export function LoginPage() {
           <Grid container spacing={2} sx={{ mb: 2, mt: 1 }}>
             <Grid item xs={12} sm={6}>
               <Button
-                variant="contained"
+                variant='contained'
                 fullWidth
-                type="submit"
+                type='submit'
                 disabled={isAuthenticating}
               >
                 Login
               </Button>
             </Grid>
 
-            <Grid item xs={12} sm={6}>
+            {/* <Grid item xs={12} sm={6}>
               <Button
-                variant="contained"
+                variant='contained'
                 fullWidth
                 onClick={onGoogleSignIn}
                 disabled={isAuthenticating}
@@ -140,17 +132,19 @@ export function LoginPage() {
                 <Google />
                 <Typography sx={{ ml: 1 }}>Google</Typography>
               </Button>
+            </Grid> */}
+            <Grid item xs={12} sm={6}>
+              <Button disabled={isAuthenticating} variant='contained' fullWidth>
+                <Link
+                  sx={{ color: 'white', textDecoration: 'none', width: '100%' }}
+                  // fullWidth
+                  component={RouterLink} // this is the reference to the Link tag from React router dom since we are using MUI it needs to be like this , because we are using the LINK tag from MUI first and after we are refering to the link tag of React router dom inside the component method. we re-named "RouterLink" son they dont colide between the LINK tag of MUI and React router dom.
+                  to='/auth/register'
+                >
+                  Sign up
+                </Link>
+              </Button>
             </Grid>
-          </Grid>
-
-          <Grid container direction={"row"} justifyContent="end">
-            <Link
-              color={"inherit"}
-              component={RouterLink} // this is the reference to the Link tag from React router dom since we are using MUI it needs to be like this , because we are using the LINK tag from MUI first and after we are refering to the link tag of React router dom inside the component method. we re-named "RouterLink" son they dont colide between the LINK tag of MUI and React router dom.
-              to="/auth/register"
-            >
-              Create a new Account..
-            </Link>
           </Grid>
         </Grid>
       </form>

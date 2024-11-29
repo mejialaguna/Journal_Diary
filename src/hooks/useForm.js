@@ -1,74 +1,60 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from 'react';
 
 export const useForm = (initialForm = {}, validator = {}) => {
   const [formState, setFormState] = useState(initialForm);
   const [validatedValues, setValidatedValues] = useState({});
 
-  // checking if the fields of the forms are valid and only checking on field change
-  useEffect(() => {
-    fieldValidator();
+  // Function to validate all form fields
+  const fieldValidator = useCallback(() => {
+    const formCheckedValues = {};
+    for (let key in validator) {
+      const [validateFn, errMessage] = validator[key];
+      const fieldValue = formState[key];
+
+      formCheckedValues[`${key}Valid`] = validateFn(fieldValue)
+        ? null
+        : errMessage;
+    }
+
+    setValidatedValues(formCheckedValues);
   }, [formState]);
 
-  useEffect(() => {
+  // Check if the entire form is valid
+  const isFormValid = useMemo(() => {
+    return Object.values(validatedValues).every((value) => value === null);
+  }, [validatedValues]);
+
+  // Handle input changes
+  const onInputChange = ({ target }) => {
+    const { name, value } = target;
+    setFormState((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  // Reset the form to its initial state
+  const onResetForm = useCallback(() => {
     setFormState(initialForm);
   }, [initialForm]);
 
-  // checking if the whole form is valid and only checking if one of the form fields changes
-  const isFormValid = useMemo(() => {
-    for (const key in validatedValues) {
-      if (validatedValues[key] !== null) return false;
-    }
-    return true;
-  }, [validatedValues]);
+  // Revalidate fields whenever the formState changes
+  useEffect(() => {
+    fieldValidator();
+  }, [formState, fieldValidator]);
 
-  const onInputChange = ({ target }) => {
-    const { name, value } = target;
-    setFormState({
-      ...formState,
-      [name]: value,
-    });
-  };
-
-  const onResetForm = () => {
+  // Reset form state if initialForm changes
+  useEffect(() => {
     setFormState(initialForm);
-  };
-
-  // field validators
-  const fieldValidator = () => {
-    const formCheckedValues = {};
-
-    for (let key in validator) {
-      const [fn, errMessage] = validator[key];
-
-      formCheckedValues[`${key}Valid`] = fn(formState[key]) ? null : errMessage;
-    }
-    setValidatedValues(formCheckedValues);
-  };
+  }, [initialForm]);
 
   return {
     ...formState,
     formState,
     onInputChange,
     onResetForm,
-
     validatedValues,
     ...validatedValues,
     isFormValid,
   };
 };
-
-// try {
-//         let missingKeys = [];
-
-// with a for in loop we dont need to use Object.Values or key or entries because this loop is special for  objects
-//          for (let key in requiredValues) {
-
-// we need to use Object.Values or key or entries using for of loop to transform the object into an array
-//         for ([key, value] of Object.entries(requiredValues)) {
-//             if (key && !value || value === "") {
-//                 missingKeys.push(key)
-//             }
-//         }
-//         if (missingKeys.length > 0) {
-//             throw new Error(`Missing some required values: ${missingKeys.join(", ")}`)
-//         }
